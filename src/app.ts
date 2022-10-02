@@ -4,11 +4,11 @@ import createHttpError from "http-errors"
 import mongoose from "mongoose";
 import { DB, PORT } from "./config";
 import { errorHandler } from "./middleware/errorHandler";
-import exampleRoute from './routes/exampleRoutes'
+import userRoute from './routes/userRoutes'
 app.use(express.json())
 
 
-app.use('/', exampleRoute)
+app.use('/', userRoute)
 
 app.use(() => {
     throw createHttpError(404, "route not found")

@@ -1,13 +1,13 @@
 import { Schema, model, Document } from "mongoose";
 
-export interface IExample extends Document {
+export interface user extends Document {
     name: string,
     id: string
 }
 
-const ExampleSchema: Schema = new Schema({
+const userSchema: Schema = new Schema({
     name: { type: String },
     id: { type: String }
 })
 
-export default model<IExample>("Example", ExampleSchema)
+export default model<user>("user", userSchema)

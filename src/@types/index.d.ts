@@ -1,4 +1,4 @@
-declare interface IExampleData {
+declare interface userData {
     name: string,
     id: string
 }
