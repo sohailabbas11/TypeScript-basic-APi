@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getUser, getUserData } from "../controllers/userControllers";
-import { getUserDataValidation } from "../validation/userValidation";
+import { getUser, signUpUser, signInUser } from "../controllers/userControllers";
+import { signInUserValidation, signUpUserValidation } from "../validation/userValidation";
 
 const router = Router()
 router.get('/', getUser)
-router.post('/', getUserDataValidation, getUserData)
+router.post('/signup', signUpUserValidation, signUpUser)
+router.post('/signIn', signInUserValidation, signInUser)
 
 export default router;
 
