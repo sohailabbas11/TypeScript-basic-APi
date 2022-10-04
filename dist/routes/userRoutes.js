@@ -5,6 +5,6 @@ const userControllers_1 = require("../controllers/userControllers");
 const userValidation_1 = require("../validation/userValidation");
 const router = (0, express_1.Router)();
 router.get('/', userControllers_1.getUser);
-router.post('/', userValidation_1.getUserDataValidation, userControllers_1.getUserData);
-router.post('/signup', userControllers_1.signUpUser);
+router.post('/signup', userValidation_1.signUpUserValidation, userControllers_1.signUpUser);
+router.post('/signIn', userValidation_1.signInUserValidation, userControllers_1.signInUser);
 exports.default = router;

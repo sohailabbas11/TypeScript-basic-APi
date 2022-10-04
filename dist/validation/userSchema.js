@@ -6,8 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.userSchema = {
-    getUserData: joi_1.default.object({
+    signUpUser: joi_1.default.object({
         name: joi_1.default.string().required(),
-        id: joi_1.default.string().required()
+        email: joi_1.default.string().email().required(),
+        password: joi_1.default.string().required()
+    }),
+    signInUser: joi_1.default.object({
+        email: joi_1.default.string().email().required(),
+        password: joi_1.default.string().required()
     })
 };

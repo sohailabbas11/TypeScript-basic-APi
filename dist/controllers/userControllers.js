@@ -35,9 +35,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUpUser = exports.getUserData = exports.getUser = void 0;
+exports.signInUser = exports.signUpUser = exports.getUserData = exports.getUser = void 0;
 const User_1 = __importDefault(require("../model/User"));
 const http_errors_1 = __importStar(require("http-errors"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = require("../config");
 const getUser = (req, res, next) => {
     res.json({ message: "hello" });
 };
@@ -63,7 +66,8 @@ const signUpUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const existingUser = yield User_1.default.findOne({ email });
         if (existingUser)
             return next((0, http_errors_1.default)(422, "Email already exists"));
-        const user = new User_1.default({ name, email, password });
+        const hashedPassword = yield bcrypt_1.default.hash(password, 10);
+        const user = new User_1.default({ name, email, password: hashedPassword });
         yield user.save();
         res.json({ message: 'user created' });
     }
@@ -72,3 +76,25 @@ const signUpUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.signUpUser = signUpUser;
+const signInUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    try {
+        const user = yield User_1.default.findOne({ email });
+        if (!user)
+            return next((0, http_errors_1.default)(404, "user not found"));
+        const isInvalidPassword = yield bcrypt_1.default.compare(password, user.password);
+        if (!isInvalidPassword)
+            return next((0, http_errors_1.default)(401, 'not valid password'));
+        const token = jsonwebtoken_1.default.sign({
+            name: user.name,
+            email: user.email,
+            userId: user.id
+        }, config_1.JWT_KEY, { expiresIn: '1d' });
+        res.cookie('jwt', token);
+        res.json({ message: 'user logged in', token });
+    }
+    catch (error) {
+        return next(http_errors_1.InternalServerError);
+    }
+});
+exports.signInUser = signInUser;
